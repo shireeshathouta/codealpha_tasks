@@ -1,0 +1,390 @@
+
+<html>
+<head>
+
+<title>Simple Music Player</title>
+
+<style>
+
+body{
+    font-family:Arial;
+    background:#222;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+
+.player{
+
+    width:320px;
+    background:#333;
+    padding:20px;
+    border-radius:15px;
+    text-align:center;
+
+}
+
+
+img{
+
+    width:150px;
+    height:150px;
+    border-radius:50%;
+
+}
+
+
+button{
+
+    padding:10px 15px;
+    margin:10px;
+    border:none;
+    border-radius:50%;
+    background:#00aaff;
+    color:white;
+    cursor:pointer;
+
+}
+
+
+button:hover{
+
+    background:#0077aa;
+
+}
+
+
+input{
+
+    width:100%;
+
+}
+
+
+.time{
+
+    display:flex;
+    justify-content:space-between;
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="player">
+
+
+<img src="https://picsum.photos/200">
+
+
+<h2 id="title">
+Song Title
+</h2>
+
+
+<p id="artist">
+Artist Name
+</p>
+
+
+
+<audio id="audio"></audio>
+
+
+
+<div>
+
+<button onclick="previousSong()">⏮</button>
+
+<button onclick="playPause()" id="play">
+▶
+</button>
+
+<button onclick="nextSong()">⏭</button>
+
+</div>
+
+
+
+<input type="range" id="progress" value="0">
+
+
+
+<div class="time">
+
+<span id="current">
+0:00
+</span>
+
+<span id="duration">
+0:00
+</span>
+
+</div>
+
+
+
+<p>Volume</p>
+
+<input type="range" 
+id="volume"
+min="0"
+max="1"
+step="0.01"
+value="1">
+
+
+</div>
+
+
+
+<script>
+
+
+let songs=[
+
+{
+title:"Song 1",
+artist:"Online Artist",
+url:"gfy1x_first_30_Seconds.mp3"
+},
+
+{
+title:"Song 2",
+artist:"Online Artist",
+url:"Rubaroo.mp3"
+},
+
+];
+
+
+
+let currentSong=0;
+
+
+let audio=document.getElementById("audio");
+
+let title=document.getElementById("title");
+
+let artist=document.getElementById("artist");
+
+let play=document.getElementById("play");
+
+let progress=document.getElementById("progress");
+
+let volume=document.getElementById("volume");
+
+
+
+
+
+function loadSong(){
+
+
+audio.src=songs[currentSong].url;
+
+title.innerHTML=songs[currentSong].title;
+
+artist.innerHTML=songs[currentSong].artist;
+
+
+}
+
+
+loadSong();
+
+
+
+
+
+function playPause(){
+
+
+if(audio.paused){
+
+audio.play();
+
+play.innerHTML="⏸";
+
+}
+
+else{
+
+audio.pause();
+
+play.innerHTML="▶";
+
+}
+
+
+}
+
+
+
+
+
+function nextSong(){
+
+
+currentSong++;
+
+
+if(currentSong>=songs.length){
+
+currentSong=0;
+
+}
+
+
+loadSong();
+
+audio.play();
+
+play.innerHTML="⏸";
+
+
+}
+
+
+
+
+
+function previousSong(){
+
+
+currentSong--;
+
+
+if(currentSong<0){
+
+currentSong=songs.length-1;
+
+}
+
+
+loadSong();
+
+audio.play();
+
+play.innerHTML="⏸";
+
+
+}
+
+
+
+
+
+// Update Progress Bar
+
+audio.addEventListener("timeupdate",()=>{
+
+
+progress.value=
+(audio.currentTime/audio.duration)*100;
+
+
+
+document.getElementById("current").innerHTML=
+formatTime(audio.currentTime);
+
+
+
+document.getElementById("duration").innerHTML=
+formatTime(audio.duration);
+
+
+});
+
+
+
+
+
+
+// Change song position
+
+progress.oninput=function(){
+
+audio.currentTime=
+(progress.value/100)*audio.duration;
+
+};
+
+
+
+
+
+
+// Volume control
+
+volume.oninput=function(){
+
+audio.volume=volume.value;
+
+};
+
+
+
+
+
+
+
+function formatTime(time){
+
+
+if(isNaN(time)){
+
+return "0:00";
+
+}
+
+
+let min=Math.floor(time/60);
+
+let sec=Math.floor(time%60);
+
+
+if(sec<10){
+
+sec="0"+sec;
+
+}
+
+
+return min+":"+sec;
+
+
+}
+
+
+
+
+// Auto play next song
+
+audio.onended=function(){
+
+nextSong();
+
+};
+
+
+
+</script>
+
+
+</body>
+</html>
+
+
+
+
+
