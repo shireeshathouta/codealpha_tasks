@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Image Gallery</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background: #f4f4f4;
+        }
+
+        h1 {
+            margin: 20px;
+            color:red;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+
+        .gallery img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px gray;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox img {
+            width: 70%;
+            max-width: 600px;
+        }
+
+        .btn {
+            position: absolute;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        #close {
+            top: 20px;
+            right: 30px;
+        }
+
+        #prev {
+            left: 20px;
+            top: 50%;
+        }
+
+        #next {
+            right: 20px;
+            top: 50%;
+        }
+
+        @media (max-width:600px) {
+            .lightbox img {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<h1>Simple Image Gallery</h1>
+
+<div class="gallery">
+    <img src="image1.png" alt="Image 1">
+    <img src="image2.png" alt="Image 2">
+    <img src="image3.png" alt="Image 3">
+    <img src="image4.png" alt="Image 4">
+    <img src="image5.png" alt="Image 5">
+</div>
+<div class="lightbox" id="lightbox">
+
+    <span class="btn" id="close">&times;</span>
+
+    <span class="btn" id="prev">&#10094;</span>
+
+    <img id="bigImage">
+
+    <span class="btn" id="next">&#10095;</span>
+
+</div>
+
+<script>
+
+let images = document.querySelectorAll(".gallery img");
+let lightbox = document.getElementById("lightbox");
+let bigImage = document.getElementById("bigImage");
+
+let current = 0;
+
+images.forEach(function(img, index) {
+
+    img.onclick = function() {
+        current = index;
+        showImage();
+        lightbox.style.display = "flex";
+    };
+
+});
+
+function showImage() {
+    bigImage.src = images[current].src;
+}
+
+document.getElementById("next").onclick = function() {
+    current = (current + 1) % images.length;
+    showImage();
+};
+
+document.getElementById("prev").onclick = function() {
+    current = (current - 1 + images.length) % images.length;
+    showImage();
+};
+
+document.getElementById("close").onclick = function() {
+    lightbox.style.display = "none";
+};
+
+lightbox.onclick = function(e) {
+    if (e.target == lightbox) {
+        lightbox.style.display = "none";
+    }
+};
+
+</script>
+
+</body>
+</html>
